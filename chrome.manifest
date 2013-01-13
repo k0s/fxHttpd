@@ -1,0 +1,4 @@
+content fxhttpd content/
+locale fxhttpd en_US locale/en_US/
+skin fxhttpd classic/1.0 skin/
+
