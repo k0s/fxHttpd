@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="chrome://global/skin/"?>
+<?xml-stylesheet type="text/css" href="chrome://fxhttpd/skin/options.css"?>
+<!DOCTYPE window SYSTEM "chrome://fxhttpd/locale/options.dtd">
+<prefwindow id="panoPreferences"
+            windowtype="FxHttpd:Preferences"
+            title="&window.title;"
+            xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <prefpane>
+    <script type="application/javascript" src="chrome://fxhttpd/content/options.js"/>
+    <preferences id="prefs">
+      <preference id="pref-autoStart"
+                  name="extensions.fxhttpd.autoStart"
+                  type="bool"
+                  instantApply="true"/>
+      <preference id="pref-port"
+                  name="extensions.fxhttpd.port"
+                  type="int"
+                  instantApply="true"/>
+      <preference id="pref-documentRoot"
+                  name="extensions.fxhttpd.documentRoot"
+                  type="file"
+                  instantApply="true"
+                  onchange="fxHttpdManager.displayDocumentRoot();"/>
+    </preferences>
+    <commandset>
+      <command id="fileHandlerAddCmd"
+               oncommand="fxHttpdManager.fileHandlers.add();"/>
+      <command id="fileHandlerSelectFile"
+               oncommand="fxHttpdManager.fileHandlers.selectFile(event);"/>
+      <command id="fileHandlerEditFile"
+               oncommand="fxHttpdManager.fileHandlers.editFile(event);"/>
+    </commandset>
+    <vbox flex="1">
+      <hbox class="row">
+        <label value="&option.status.label;"/>
+        <description id="fxhttpd-status" value=""/>
+        <button id="fxhttpd-togglestart-button"
+                label=""
+                accesskey="S"
+                oncommand="fxHttpdManager.toggleStart();"/>
+      </hbox>
+      <sperator class="thin"/>
+      <checkbox label="&option.autoStart.label;"
+                tooltiptext="&option.autoStart.title;"
+                preference="pref-autoStart"
+                accesskey="A"/>
+
+      <hbox class="row">
+        <label value="&option.port.label;"
+               accesskey="P"
+               control="protNumber"/>
+        <textbox id="portNumber"
+                 type="number"
+                 increment="10"
+                 maxlength="5"
+                 preference="pref-port"/>
+      </hbox>
+      <hbox class="row"
+            flex="1"
+            tooltiptext="&option.documentRoot.title;">
+        <label value="&option.documentRoot.label;"
+               control="documentRoot-filepicker"/>
+        <filefield id="documentRootField"
+                   preference="pref-documentRoot"/>
+        <button id="documentRoot-filepicker"
+                label="&option.documentRoot.buttonLabel;"
+                accesskey="B"
+                oncommand="fxHttpdManager.selectDocumentRoot();"/>
+      </hbox>
+
+      <groupbox>
+        <caption label="&fileHandlers.group.label;"/>
+        <richlistbox id="fileHandlersList" flex="1"/>
+        <hbox>
+          <button id="addFileHandlerButton"
+                  label="&fileHandlers.add.label;"
+                  oncommand="fxHttpdManager.fileHandlers.add();"/>
+        </hbox>
+      </groupbox>
+    </vbox>
+  </prefpane>
+</prefwindow>
+<!-- vim: set foldlevel=4: -->

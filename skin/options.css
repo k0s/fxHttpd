@@ -1,0 +1,33 @@
+
+#fxhttpd-status {
+  width: 150px;
+  color: white;
+  border-radius: 3px;
+  text-align: center;
+  padding: 3px;
+  transition: background-color 0.3s;
+}
+#fxhttpd-status.started {
+  background-color: green;
+}
+#fxhttpd-status.stopped {
+  background-color: red;
+}
+
+hbox.row {
+  -moz-box-align: center;
+}
+#portNumber {
+  width: 5em;
+}
+#documentRootField {
+  width: 400px;
+}
+
+#fileHandlersList richlistitem {
+  -moz-box-align: center;
+}
+richlistitem > .path-prefix {
+  margin-right: 0;
+}
+

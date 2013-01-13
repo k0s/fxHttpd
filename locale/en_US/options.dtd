@@ -1,0 +1,11 @@
+<!ENTITY window.title "FxHTTPD Options">
+<!ENTITY option.status.label "Server status">
+<!ENTITY option.autoStart.label "auto start">
+<!ENTITY option.autoStart.title "start automatically at startup">
+<!ENTITY option.port.label "Port Number">
+<!ENTITY option.documentRoot.label "DocumentRoot">
+<!ENTITY option.documentRoot.title "a directory of server's document root">
+<!ENTITY option.documentRoot.buttonLabel "Browse...">
+
+<!ENTITY fileHandlers.group.label "File Handlers">
+<!ENTITY fileHandlers.add.label "Add">
