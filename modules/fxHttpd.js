@@ -18,6 +18,23 @@ const SERVER_CONFIG = {
         return defaultValue;
     }
   },
+  getHandlers: function (name) {
+    name += ".";
+    var prefs = Services.prefs.getBranch("extensions.fxhttpd." + name);
+    var i = 1;
+    var childList = prefs.getChildList(i + ".");
+    while (childList.length > 0) {
+      let res = {
+        number: i,
+      };
+      for (let child of childList) {
+        let key = child.substr(("" + i).length + 1);
+        res[key] = prefs.getComplexValue(child, Ci.nsISupportsString).data;
+      }
+      yield res;
+      childList = prefs.getChildList((++i) + ".");
+    }
+  },
 };
 
 const FxHTTPD = {
@@ -55,6 +72,8 @@ const FxHTTPD = {
         this.httpd.registerDirectory("/", dir);
       }
     }
+    this.registerPathHandlers();
+
     this.httpd.start(port);
     Services.obs.notifyObservers(null, "fxHttpd:status:changed", "started");
   },
@@ -64,6 +83,26 @@ const FxHTTPD = {
         Services.console.logStringMessage("fxhttpd: server stopped.");
         Services.obs.notifyObservers(null, "fxHttpd:status:changed", "stopped");
       });
+    }
+  },
+  registerPathHandlers: function () {
+    var now = Date.now();
+    for (let handler of SERVER_CONFIG.getHandlers("fileHandlers")) {
+      if (!handler.path || !handler.file)
+        continue;
+
+      try {
+        let file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
+        file.initWithPath(handler.file);
+        if (file.exists() && file.isFile()) {
+          let uri = Services.io.newFileURI(file);
+          let tmp = {};
+          Services.scriptloader.loadSubScript(uri.spec + "?" + now, tmp, "utf-8");
+          this.httpd.registerPathHandler("/" + handler.path, tmp);
+        }
+      } catch (e) {
+        Cu.reportError(e);
+      }
     }
   },
 };
