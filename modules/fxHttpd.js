@@ -35,7 +35,7 @@ const FxHTTPD = {
     this.stop();
     this.httpd = null;
     Cu.unload("resource://fxhttpd/httpd.js");
-  }
+  },
   get isRunning() {
     if (this.httpd) {
       return !this.httpd._socketClosed;
