@@ -36,6 +36,11 @@ example)
 
 `handle` function must be required.
 
+LICENSE
+-------
+
+ * [MPL 2.0][MPL2.0]
 
 [httpdjs]: http://mxr.mozilla.org/mozilla-central/source/netwerk/test/httpserver/httpd.js
+[MPL2.0]: http://www.mozilla.org/MPL/2.0/
 

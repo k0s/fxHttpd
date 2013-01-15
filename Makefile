@@ -2,7 +2,7 @@
 VERSION = $(shell sed -n 's,^.*<em:version>\(.*\)</em:version>.*$$,\1,p' install.rdf)
 TARGET = fxHttpd-${VERSION}.xpi
 DIRS = content modules locale skin defaults
-FILES = install.rdf bootstrap.js chrome.manifest README.md
+FILES = install.rdf bootstrap.js chrome.manifest README.md LICENSE.txt
 CONTENTS = $(shell find ${DIRS} ! -name ".*")
 
 .PHONY: clean
