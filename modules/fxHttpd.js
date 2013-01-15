@@ -4,6 +4,7 @@ const { classes: Cc, interfaces: Ci, utils: Cu, results: Cr, manager: Cm } = Com
 Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 Cu.import("resource://fxhttpd/httpd.js");
+Cu.import("resource://fxhttpd/httpd_util.jsm");
 
 const SERVER_CONFIG = {
   prefs: Services.prefs.getBranch("extensions.fxhttpd."),
