@@ -3,6 +3,7 @@ const EXPORTED_SYMBOLS = ["FxHTTPD"];
 const { classes: Cc, interfaces: Ci, utils: Cu, results: Cr, manager: Cm } = Components;
 Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
+Cu.import("resource://fxhttpd/httpd.js");
 
 const SERVER_CONFIG = {
   prefs: Services.prefs.getBranch("extensions.fxhttpd."),
@@ -42,8 +43,6 @@ const FxHTTPD = {
   config: SERVER_CONFIG,
 
   init: function () {
-    Cu.import("resource://fxhttpd/httpd.js", this);
-    Services.console.logStringMessage("FxHTTPD: module loaded");
     if (SERVER_CONFIG.get("autoStart", false)) {
       this.start();
     }
@@ -63,7 +62,7 @@ const FxHTTPD = {
     var port = SERVER_CONFIG.get("port", 8090),
         documentRoot = SERVER_CONFIG.get("documentRoot", "");
 
-    this.httpd = new this.HttpServer();
+    this.httpd = new HttpServer();
 
     if (documentRoot) {
       let dir = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
