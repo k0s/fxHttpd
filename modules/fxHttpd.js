@@ -107,19 +107,3 @@ const FxHTTPD = {
   },
 };
 
-const Observer = {
-  observe: function (aSubject, aTopic, aData) {
-    switch (aTopic) {
-      case "nsPref:changed":
-        switch (aData) {
-          case "extensions.fxhttpd.started":
-            Services.console.logStringMessage("changed: fxhttpd started: " + SERVER_CONFIG.get("started"));
-            break;
-        }
-        break;
-    }
-  },
-  QueryInterface: XPCOMUtils.generateQI(["nsIObserver", "nsISupportsWeakReference"]),
-};
-
-
