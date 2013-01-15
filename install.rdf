@@ -4,7 +4,7 @@
     <em:id>fx-httpd@teramako.github.com</em:id>
     <em:type>2</em:type>
     <em:name>fxHttpd</em:name>
-    <em:version>0.2pre</em:version>
+    <em:version>0.2</em:version>
     <em:creator>teramako</em:creator>
     <em:description>HTTPD Server</em:description>
     <em:bootstrap>true</em:bootstrap>
