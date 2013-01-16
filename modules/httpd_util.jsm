@@ -102,7 +102,7 @@ RequestQuery.prototype = {
   get: function RQ_get (key, defaultValue) {
     return this.data.has(key) ? this.data.get(key) : null;
   }, // 3}}}
-  // void::set (any::key,  any:defaultValue) {{{3
+  // void::set (any::key,  any:value) {{{3
   set: function RQ_set (key, value) {
     return this.data.set(key, value);
   }, // 3}}}
