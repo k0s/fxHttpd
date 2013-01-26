@@ -6,6 +6,10 @@
 <!ENTITY option.documentRoot.label "DocumentRoot">
 <!ENTITY option.documentRoot.title "a directory of server's document root">
 <!ENTITY option.documentRoot.buttonLabel "Browse...">
+<!ENTITY option.loopbackOnly.label "Loopback only">
+<!ENTITY option.loopbackOnly.title "enable to connect from only loopback or everybody">
+<!ENTITY option.hosts.label "Host names or IP addresses">
+<!ENTITY option.hosts.title "can multi comma separated values">
 
 <!ENTITY fileHandlers.group.label "File Handlers">
 <!ENTITY fileHandlers.add.label "Add">
