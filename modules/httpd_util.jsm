@@ -120,7 +120,7 @@ RequestQuery.prototype = {
   }, // 3}}}
   // Iterator::iterator () {{{3
   iterator: function RQ_iterator () {
-    return this.m.iterator();
+    return this.data.iterator();
   }, // 3}}}
   // String::_getInputData ([Number::count]) {{{3
   _getInputData: function RQ__getInputData (count) {
