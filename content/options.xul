@@ -22,6 +22,10 @@
                   type="file"
                   instantApply="true"
                   onchange="fxHttpdManager.displayDocumentRoot();"/>
+      <preference id="pref-loopbackOnly"
+                  name="extensions.fxhttpd.loopbackOnly"
+                  type="bool"
+                  instantApply="true"/>
     </preferences>
     <commandset>
       <command id="fileHandlerAddCmd"
@@ -45,6 +49,11 @@
                 tooltiptext="&option.autoStart.title;"
                 preference="pref-autoStart"
                 accesskey="A"/>
+
+      <checkbox label="&option.loopbackOnly.label;"
+                tooltiptext="&option.loopbackOnly.title;"
+                preference="pref-loopbackOnly"
+                accesskey="L"/>
 
       <hbox class="row">
         <label value="&option.port.label;"
