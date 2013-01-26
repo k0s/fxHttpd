@@ -57,6 +57,7 @@ const fxHttpdManager = (function() {
       Services.obs.addObserver(this, "fxHttpd:status:changed", true);
       setStatus(FxHTTPD.isRunning);
       this.displayDocumentRoot();
+      this.onChangeLoopback();
       this.fileHandlers.init();
     },
     toggleStart: function fxHttpdManager_toggleStart () {
@@ -80,6 +81,12 @@ const fxHttpdManager = (function() {
         $documentRootField.label = file.path;
         $documentRootField.image = "moz-icon://" + FPH.getURLSpecFromFile(file) + "?size=16";
       }
+    },
+
+    onChangeLoopback: function fxHttpdManager_onChangeLoopback () {
+      var hostsBox = $id("hostsBox"),
+          pref = $id("pref-loopbackOnly");
+      hostsBox.collapsed = pref.value;
     },
     
     fileHandlers: {

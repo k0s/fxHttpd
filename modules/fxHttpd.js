@@ -62,6 +62,7 @@ const FxHTTPD = {
   start: function() {
     var port = SERVER_CONFIG.get("port", 8090),
         loopbackOnly = SERVER_CONFIG.get("loopbackOnly", true),
+        hosts = SERVER_CONFIG.get("hosts", ""),
         documentRoot = SERVER_CONFIG.get("documentRoot", "");
 
     this.httpd = new HttpServer();
@@ -71,6 +72,11 @@ const FxHTTPD = {
       dir.initWithPath(documentRoot);
       if (dir.exists() && dir.isDirectory()) {
         this.httpd.registerDirectory("/", dir);
+      }
+    }
+    if (hosts) {
+      for (let host of hosts.split(/\s*,\s*/)) {
+        this.httpd._identity.add("http", host, port);
       }
     }
     this.registerPathHandlers();

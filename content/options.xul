@@ -25,6 +25,11 @@
       <preference id="pref-loopbackOnly"
                   name="extensions.fxhttpd.loopbackOnly"
                   type="bool"
+                  instantApply="true"
+                  onchange="fxHttpdManager.onChangeLoopback();"/>
+      <preference id="pref-hosts"
+                  name="extensions.fxhttpd.hosts"
+                  type="string"
                   instantApply="true"/>
     </preferences>
     <commandset>
@@ -50,10 +55,20 @@
                 preference="pref-autoStart"
                 accesskey="A"/>
 
-      <checkbox label="&option.loopbackOnly.label;"
-                tooltiptext="&option.loopbackOnly.title;"
-                preference="pref-loopbackOnly"
-                accesskey="L"/>
+      <hbox class="row">
+        <checkbox label="&option.loopbackOnly.label;"
+                  tooltiptext="&option.loopbackOnly.title;"
+                  preference="pref-loopbackOnly"
+                  accesskey="L"/>
+        <hbox id="hostsBox" class="row">
+          <textbox id="hostsValue"
+                   preference="pref-hosts"/>
+          <label value="&option.hosts.label;"
+                 tooltiptext="&option.hosts.title;"
+                 accesskey="H"
+                 control="hostsValue"/>
+        </hbox>
+      </hbox>
 
       <hbox class="row">
         <label value="&option.port.label;"
