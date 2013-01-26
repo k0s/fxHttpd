@@ -61,6 +61,7 @@ const FxHTTPD = {
   },
   start: function() {
     var port = SERVER_CONFIG.get("port", 8090),
+        loopbackOnly = SERVER_CONFIG.get("loopbackOnly", true),
         documentRoot = SERVER_CONFIG.get("documentRoot", "");
 
     this.httpd = new HttpServer();
@@ -74,7 +75,7 @@ const FxHTTPD = {
     }
     this.registerPathHandlers();
 
-    this.httpd.start(port);
+    this.httpd.start(port, loopbackOnly);
     Services.obs.notifyObservers(null, "fxHttpd:status:changed", "started");
   },
   stop: function () {

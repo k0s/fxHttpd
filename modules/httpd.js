@@ -497,12 +497,12 @@ nsHttpServer.prototype =
   //
   // see nsIHttpServer.start
   //
-  start: function(port)
+  start: function(port, loopbackOnly)
   {
-    this._start(port, "localhost")
+    this._start(port, "localhost", loopbackOnly)
   },
 
-  _start: function(port, host)
+  _start: function(port, host, loopbackOnly)
   {
     if (this._socket)
       throw Cr.NS_ERROR_ALREADY_INITIALIZED;
@@ -524,13 +524,8 @@ nsHttpServer.prototype =
 
     try
     {
-      var loopback = true;
-      if (this._host != "127.0.0.1" && this._host != "localhost") {
-        var loopback = false;
-      }
-
       var socket = new ServerSocket(this._port,
-                                    loopback, // true = localhost, false = everybody
+                                    loopbackOnly, // true = localhost, false = everybody
                                     maxConnections);
       dumpn(">>> listening on port " + socket.port + ", " + maxConnections +
             " pending connections");
