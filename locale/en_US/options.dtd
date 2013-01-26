@@ -13,3 +13,5 @@
 
 <!ENTITY fileHandlers.group.label "File Handlers">
 <!ENTITY fileHandlers.add.label "Add">
+<!ENTITY fileHandlers.path.label "Server Path">
+<!ENTITY fileHandlers.file.label "File Path">

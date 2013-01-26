@@ -34,7 +34,7 @@
     </preferences>
     <commandset>
       <command id="fileHandlerAddCmd"
-               oncommand="fxHttpdManager.fileHandlers.add();"/>
+               oncommand="fxHttpdManager.fileHandlers.add({}, true);"/>
       <command id="fileHandlerSelectFile"
                oncommand="fxHttpdManager.fileHandlers.selectFile(event);"/>
       <command id="fileHandlerEditFile"
@@ -95,11 +95,22 @@
 
       <groupbox>
         <caption label="&fileHandlers.group.label;"/>
-        <richlistbox id="fileHandlersList" flex="1"/>
+        <grid id="fileHandlersList" flex="1">
+          <columns>
+            <column flex="1"/>
+            <column flex="3"/>
+          </columns>
+          <rows id="fileHandlersRows">
+            <row>
+              <label value="&fileHandlers.path.label;"/>
+              <label value="&fileHandlers.file.label;"/>
+            </row>
+          </rows>
+        </grid>
         <hbox>
           <button id="addFileHandlerButton"
                   label="&fileHandlers.add.label;"
-                  oncommand="fxHttpdManager.fileHandlers.add();"/>
+                  command="fileHandlerAddCmd"/>
         </hbox>
       </groupbox>
     </vbox>
