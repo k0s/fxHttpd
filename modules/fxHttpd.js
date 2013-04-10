@@ -144,13 +144,6 @@ ScriptContext.prototype = {
     throw new HTTP_501;
   },
   /**
-   * @getter
-   * @return {Window}
-   */
-  get recentWindow () {
-    return Services.wm.getMostRecentWindow("navigator:browser");
-  },
-  /**
    * get {aPath}'s file object
    *  - the path delimiter must be "/" (even if the platform is Windows)
    *  - acceptable a relative path from the script's path
