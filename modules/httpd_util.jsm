@@ -3,9 +3,12 @@ const EXPORTED_SYMBOLS = [
   "escapeHTML",
   "UnicodeConverter",
   "RequestQuery",
+  "getRecentWindow",
 ];
 
 const { classes: Cc, interfaces: Ci, utils: Cu, results: Cr, manager: Cm } = Components;
+
+Cu.import("resource://gre/modules/Services.jsm");
 
 function escapeHTML (text) {
   return text.replace(/[<>&]/g, function(char) {
@@ -17,6 +20,15 @@ function escapeHTML (text) {
     }
   });
 }
+
+/**
+ * get Firefox's most recent window object
+ * @return {Window}
+ */
+function getRecentWindow () {
+  return Services.wm.getMostRecentWindow("navigator:browser");
+}
+
 // CC (contractID, interfaceName [, initializer]) {{{1
 /**
  * @description fix Component.Constructor
