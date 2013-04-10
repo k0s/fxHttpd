@@ -150,5 +150,59 @@ ScriptContext.prototype = {
   get recentWindow () {
     return Services.wm.getMostRecentWindow("navigator:browser");
   },
+  /**
+   * get {aPath}'s file object
+   *  - the path delimiter must be "/" (even if the platform is Windows)
+   *  - acceptable a relative path from the script's path
+   *    when {aPath} starts with "./" or "../"
+   *  - otherwise processes as a full path
+   * @param {String} aPath
+   * @return {nsIFile}
+   */
+  getFile: function SC_getFile (aPath) {
+    var file;
+    var pathes = aPath.split("/");
+    if (pathes[0] === "." || pathes[0] === "..") {
+      file = this.__FILE__.parent;
+      for (let path of pathes) {
+        switch (path) {
+          case ".":
+            break;
+          case "..":
+            file = file.parent;
+            break;
+          default:
+            file.append(path);
+        }
+      }
+    } else {
+      if (Services.appinfo.OS === "WINNT") {
+        aPath = aPath.replace("/", "\\", "g");
+      }
+      file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
+      file.initWithPath(aPath);
+    }
+    return file;
+  },
+  /**
+   * convert {aFile} to URI object
+   * @param {nsIFile} aFile
+   * @return {nsIURI}
+   */
+  fileToURI: function SC_fileToURI (aFile) {
+    return Services.io.newFileURI(aFile);
+  },
+  /**
+   * load {aPath}'s script to this {aContext}
+   * @param {String} aPath
+   * @param {Object} aContext
+   */
+  loadScript: function SC_loadScript (aPath, aContext) {
+    var uri = this.fileToURI(this.getFile(aPath));
+    if (typeof aContext !== "object" || aContext === null) {
+      throw new TypeError("aContext must be an object");
+    }
+    Services.scriptloader.loadSubScript(uri.spec, aContext, "utf-8");
+  },
 };
 
