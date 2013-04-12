@@ -36,7 +36,7 @@ example)
 
 `handle` function must be required.
 
-for more detail, see wiki
+for more detail, see [wiki]'s [How to pathhandlers][pathHandlers]
 
 LICENSE
 -------
@@ -45,4 +45,6 @@ LICENSE
 
 [httpdjs]: http://mxr.mozilla.org/mozilla-central/source/netwerk/test/httpserver/httpd.js
 [MPL2.0]: http://www.mozilla.org/MPL/2.0/
+[wiki]: https://github.com/teramako/fxHttpd/wiki
+[pathHandlers]: https://github.com/teramako/fxHttpd/wiki/How-to-pathhandlers
 
