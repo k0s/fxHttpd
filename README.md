@@ -36,6 +36,8 @@ example)
 
 `handle` function must be required.
 
+for more detail, see wiki
+
 LICENSE
 -------
 

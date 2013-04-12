@@ -22,10 +22,19 @@
                   type="file"
                   instantApply="true"
                   onchange="fxHttpdManager.displayDocumentRoot();"/>
+      <preference id="pref-loopbackOnly"
+                  name="extensions.fxhttpd.loopbackOnly"
+                  type="bool"
+                  instantApply="true"
+                  onchange="fxHttpdManager.onChangeLoopback();"/>
+      <preference id="pref-hosts"
+                  name="extensions.fxhttpd.hosts"
+                  type="string"
+                  instantApply="true"/>
     </preferences>
     <commandset>
       <command id="fileHandlerAddCmd"
-               oncommand="fxHttpdManager.fileHandlers.add();"/>
+               oncommand="fxHttpdManager.fileHandlers.add({}, true);"/>
       <command id="fileHandlerSelectFile"
                oncommand="fxHttpdManager.fileHandlers.selectFile(event);"/>
       <command id="fileHandlerEditFile"
@@ -45,6 +54,21 @@
                 tooltiptext="&option.autoStart.title;"
                 preference="pref-autoStart"
                 accesskey="A"/>
+
+      <hbox class="row">
+        <checkbox label="&option.loopbackOnly.label;"
+                  tooltiptext="&option.loopbackOnly.title;"
+                  preference="pref-loopbackOnly"
+                  accesskey="L"/>
+        <hbox id="hostsBox" class="row">
+          <textbox id="hostsValue"
+                   preference="pref-hosts"/>
+          <label value="&option.hosts.label;"
+                 tooltiptext="&option.hosts.title;"
+                 accesskey="H"
+                 control="hostsValue"/>
+        </hbox>
+      </hbox>
 
       <hbox class="row">
         <label value="&option.port.label;"
@@ -71,11 +95,22 @@
 
       <groupbox>
         <caption label="&fileHandlers.group.label;"/>
-        <richlistbox id="fileHandlersList" flex="1"/>
+        <grid id="fileHandlersList" flex="1">
+          <columns>
+            <column flex="1"/>
+            <column flex="3"/>
+          </columns>
+          <rows id="fileHandlersRows">
+            <row>
+              <label value="&fileHandlers.path.label;"/>
+              <label value="&fileHandlers.file.label;"/>
+            </row>
+          </rows>
+        </grid>
         <hbox>
           <button id="addFileHandlerButton"
                   label="&fileHandlers.add.label;"
-                  oncommand="fxHttpdManager.fileHandlers.add();"/>
+                  command="fileHandlerAddCmd"/>
         </hbox>
       </groupbox>
     </vbox>

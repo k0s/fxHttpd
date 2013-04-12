@@ -57,6 +57,7 @@ const fxHttpdManager = (function() {
       Services.obs.addObserver(this, "fxHttpd:status:changed", true);
       setStatus(FxHTTPD.isRunning);
       this.displayDocumentRoot();
+      this.onChangeLoopback();
       this.fileHandlers.init();
     },
     toggleStart: function fxHttpdManager_toggleStart () {
@@ -81,35 +82,46 @@ const fxHttpdManager = (function() {
         $documentRootField.image = "moz-icon://" + FPH.getURLSpecFromFile(file) + "?size=16";
       }
     },
+
+    onChangeLoopback: function fxHttpdManager_onChangeLoopback () {
+      var hostsBox = $id("hostsBox"),
+          pref = $id("pref-loopbackOnly");
+      hostsBox.collapsed = pref.value;
+    },
     
     fileHandlers: {
-      handlers: [],
       init: function () {
         this.prefs = Services.prefs.getBranch("extensions.fxhttpd.fileHandlers.");
-        this.listBox = $id("fileHandlersList");
+        this.rows = $id("fileHandlersRows");
         this.$prefs = $id("prefs");
         for (let handler of FxHTTPD.config.getHandlers("fileHandlers")) {
-          this.handlers.push(handler);
           this.add(handler);
         }
-        this.listBox.addEventListener("command", this, false);
+        this.rows.addEventListener("command", this, false);
       },
-      add: function (handler) {
+      add: function (handler, force) {
         if (!handler)
           handler = {};
 
-        if (!handler.number)
-          handler.number =  this.listBox.getRowCount() + 1;
+        if (!force && !handler.path && !handler.file)
+          return;
+
+        var number = this.rows.childNodes.length;
+        if (number < handler.number)
+          Services.prefs.deleteBranch("extensions.fxhttpd.fileHandlers." + handler.number + ".");
+
 
         var prefs = [
           createElement("preference", {
-            id: "pref-fileHandler-path-" + handler.number,
-            name: "extensions.fxhttpd.fileHandlers." + handler.number + ".path",
+            id: "pref-fileHandler-path-" + number,
+            name: "extensions.fxhttpd.fileHandlers." + number + ".path",
+            instantApply: "true",
             type: "string"
           }),
           createElement("preference", {
-            id: "pref-fileHandler-file-" + handler.number,
-            name: "extensions.fxhttpd.fileHandlers." + handler.number + ".file",
+            id: "pref-fileHandler-file-" + number,
+            name: "extensions.fxhttpd.fileHandlers." + number + ".file",
+            instantApply: "true",
             type: "string"
           }),
         ];
@@ -117,33 +129,40 @@ const fxHttpdManager = (function() {
           this.$prefs.appendChild(pref);
         }
 
-        var item = createElement("richlistitem", {
-              id: "fileHandler-item-" + handler.number,
-              value: handler.number
+        var item = createElement("row", {
+              id: "fileHandler-item-" + number,
+              value: number
             }),
+            pathContainer = createElement("hbox", { class: "row" }),
             label = createElement("label", { value: "/", class: "path-prefix" }),
             textbox = createElement("textbox", {
-              id: "fileHandler-path-" + handler.number,
+              id: "fileHandler-path-" + number,
               flex: "1",
               value: handler.path || "",
-              preference: "pref-fileHandler-path-" + handler.number
+              preference: "pref-fileHandler-path-" + number
             }),
+            fileContainer = createElement("hbox", { class: "row" }),
             filefield = createElement("textbox", {
-              id: "fileHandler-file-" + handler.number,
+              id: "fileHandler-file-" + number,
               flex: "3",
               value: handler.file || "",
-              preference: "pref-fileHandler-file-" + handler.number
+              preference: "pref-fileHandler-file-" + number
             }),
             selectButton = createElement("button", {
               label: "Select...",
-              rowNum: handler.number,
+              rowNum: number,
               value: "select",
             });
 
-        for (let elm of [label, textbox, filefield, selectButton]) {
-          item.appendChild(elm);
-        }
-        this.listBox.appendChild(item);
+        pathContainer.appendChild(label);
+        pathContainer.appendChild(textbox);
+        fileContainer.appendChild(filefield);
+        fileContainer.appendChild(selectButton);
+        item.appendChild(pathContainer);
+        item.appendChild(fileContainer);
+        this.rows.appendChild(item);
+        prefs[0].value = textbox.value;
+        prefs[1].value = filefield.value;
       },
       handleEvent: function (aEvent) {
         var target = aEvent.target;

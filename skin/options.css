@@ -24,10 +24,7 @@ hbox.row {
   width: 400px;
 }
 
-#fileHandlersList richlistitem {
-  -moz-box-align: center;
-}
-richlistitem > .path-prefix {
+.path-prefix {
   margin-right: 0;
 }
 

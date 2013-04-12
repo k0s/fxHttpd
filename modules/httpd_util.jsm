@@ -3,9 +3,12 @@ const EXPORTED_SYMBOLS = [
   "escapeHTML",
   "UnicodeConverter",
   "RequestQuery",
+  "getRecentWindow",
 ];
 
 const { classes: Cc, interfaces: Ci, utils: Cu, results: Cr, manager: Cm } = Components;
+
+Cu.import("resource://gre/modules/Services.jsm");
 
 function escapeHTML (text) {
   return text.replace(/[<>&]/g, function(char) {
@@ -17,6 +20,15 @@ function escapeHTML (text) {
     }
   });
 }
+
+/**
+ * get Firefox's most recent window object
+ * @return {Window}
+ */
+function getRecentWindow () {
+  return Services.wm.getMostRecentWindow("navigator:browser");
+}
+
 // CC (contractID, interfaceName [, initializer]) {{{1
 /**
  * @description fix Component.Constructor
@@ -44,6 +56,7 @@ function CC (contractID, interfaceName, initializer) {
   }
 } // 1}}}
 
+const TTUS = Cc["@mozilla.org/intl/texttosuburi;1"].getService(Ci.nsITextToSubURI);
 const BinaryInputStream = CC("@mozilla.org/binaryinputstream;1", "nsIBinaryInputStream", "setInputStream");
 const UnicodeConverter  = CC("@mozilla.org/intl/scriptableunicodeconverter", "nsIScriptableUnicodeConverter",
                            function (charset) { this.charset = charset; });
@@ -102,7 +115,7 @@ RequestQuery.prototype = {
   get: function RQ_get (key, defaultValue) {
     return this.data.has(key) ? this.data.get(key) : null;
   }, // 3}}}
-  // void::set (any::key,  any:defaultValue) {{{3
+  // void::set (any::key,  any:value) {{{3
   set: function RQ_set (key, value) {
     return this.data.set(key, value);
   }, // 3}}}
@@ -120,7 +133,7 @@ RequestQuery.prototype = {
   }, // 3}}}
   // Iterator::iterator () {{{3
   iterator: function RQ_iterator () {
-    return this.m.iterator();
+    return this.data.iterator();
   }, // 3}}}
   // String::_getInputData ([Number::count]) {{{3
   _getInputData: function RQ__getInputData (count) {
@@ -244,27 +257,14 @@ HeaderValue.prototype = {
  */
 function RequestBodyField (isFormData, name, data) {
   this.name = name || "";
-  this._data = "";
+  this.data = data || "";
   this.isFormData = !!isFormData;
-  if (data)
-    this.data = data;
 }
 RequestBodyField.prototype = {
   // ReponseBodyField's default properties {{{3
   contentType: "application/octetstream",
   fileName: "",
   // 3}}}
-  // String::getter data {{{3
-  get data() {
-    return this._data;
-  }, // 3}}}
-  // String::setter data {{{3
-  set data(val) {
-    if (!this.isFormData) {
-      val = decodeURIComponent(val);
-    }
-    return this._data = val;
-  }, // 3}}}
   // void::setHeaders (String::lines) {{{3
   setHeaders: function RBF_setHeaders (lines) {
     if (!Array.isArray(lines)) {
@@ -312,10 +312,18 @@ RequestBodyField.prototype = {
   // String::toString ([String::charset]) {{{3
   toString: function RBF_toString (charset) {
     charset = charset || this.charset || "";
-    if (charset)
-      return UnicodeConverter(charset).ConvertToUnicode(this._data);
-
-    return this._data;
+    if (charset) {
+      try {
+        if (this.isFormData)
+          return UnicodeConverter(charset).ConvertToUnicode(this.data);
+        else
+          return TTUS.UnEscapeAndConvert(charset, this.data);
+      } catch (e) {
+        Cu.reportError(e);
+        return this.data;
+      }
+    }
+    return this.data;
   }, // 3}}}
 };
 // 2}}}
