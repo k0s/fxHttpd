@@ -111,6 +111,25 @@ const FxHTTPD = {
   },
 };
 
+const ScriptError = Components.Constructor("@mozilla.org/scripterror;1", "nsIScriptError", "init");
+const console = {
+  log: function console_log (...msgs) {
+    Services.console.logStringMessage("[fxHttpd] " + msgs.join(" "));
+  },
+  error: function console_log (url, flag, ...msgs) {
+    var scriptError;
+    if (msgs.length === 1 && msgs[0] instanceof Error) {
+      let msg = msgs[0];
+      scriptError = new ScriptError("[fxHttpd] " + msg.message, msg.fileName, null,
+                                    msg.lineNumber, msg.columnNumber, flag, "fxHttpd");
+    } else {
+      scriptError = new ScriptError("[fxHttpd] " + msgs.join(" "), url, null,
+                                    0, 0, flag, "fxHttpd");
+    }
+    Services.console.logMessage(scriptError);
+  }
+};
+
 /**
  * @class
  * @param {nsIFIle} aFile
@@ -130,6 +149,15 @@ function ScriptContext (aFile) {
         return aFile.clone();
       },
       enumerable: true,
+    },
+    console: {
+      value: {
+        log:   console.log.bind(this),
+        warn:  console.error.bind(this, uri.spec, Ci.nsIScriptError.warningFlag),
+        error: console.error.bind(this, uri.spec, Ci.nsIScriptError.errorFlag),
+      },
+      enumerable: true,
+      configurable: true,
     },
   });
   Services.scriptloader.loadSubScript(uri.spec + "?" + now, this, "utf-8");
